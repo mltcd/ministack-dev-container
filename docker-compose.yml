@@ -1,0 +1,32 @@
+services:
+  ministack:
+    image: ministackorg/ministack:1.3.36-full
+    container_name: ministack
+    ports:
+      - "4566:4566"
+    environment:
+      - MINISTACK_LOG_LEVEL=info
+    healthcheck:
+      #test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:4566/_ministack/health')\""] # alternative if nc is not available in the image
+      test: ["CMD", "nc", "-z", "localhost", "4566"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: dev
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/work:cached
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    depends_on:
+      ministack:
+        condition: service_healthy
