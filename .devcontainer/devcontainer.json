@@ -5,7 +5,7 @@
   "workspaceFolder": "/work",
   "shutdownAction": "stopCompose",
   "remoteUser": "wojtek",
-  "forwardPorts": [4566],  
+  "forwardPorts": [4566],
   "customizations": {
     "vscode": {
       "extensions": [
